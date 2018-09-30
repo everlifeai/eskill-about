@@ -1,0 +1,13 @@
+{
+  "name": "elife-about",
+  "version": "0.1.0",
+  "description": "A Skill that learns about the Avatar's Owner",
+  "main": "index.js",
+  "repository": " ",
+  "author": "charles.lobo@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "cote": "^0.17.3",
+    "elife-utils": "everlifeai/elife-utils"
+  }
+}
