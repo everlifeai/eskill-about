@@ -111,17 +111,4 @@ function startMicroservice() {
 
 }
 
-
-/*      outcome/
- * If this is a message directed to me, relay it to my owner over the
- * last used channel
- */
-function processMsg(msg) {
-    if(msg.value.content.type == 'direct-msg' && msg.value.content.to == ssbid) {
-        sendMsgOnLastChannel({
-            msg: msg.value.author + ' says:\n' + msg.value.content.text,
-        })
-    }
-}
-
 main()
