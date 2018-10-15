@@ -2,9 +2,6 @@
 const cote = require('cote')({statusLogsEnabled:false})
 const u = require('elife-utils')
 
-let ssbid
-let account
-
 /*      understand/
  * This is the main entry point where we start.
  *
@@ -15,8 +12,8 @@ let account
 function main() {
     startMicroservice()
     registerWithCommMgr()
-    registerWithSSB()
     getWalletAccount()
+    getAvatarID()
 }
 
 const commMgrClient = new cote.Requester({
@@ -48,9 +45,26 @@ function registerWithCommMgr() {
     })
 }
 
+const ssbClient = new cote.Requester({
+    name: 'elife-about -> SSB',
+    key: 'everlife-ssb-svc',
+})
+
+/*      outcome/
+ * Get the avatar id
+ */
+let avatarid
+function getAvatarID() {
+    ssbClient.send({ type: 'avatar-id' }, (err, id) => {
+        if(err) u.showErr(err)
+        else avatarid = id
+    })
+}
+
 /*      outcome/
  * Load the wallet account from the stellar microservice
  */
+let account
 function getWalletAccount() {
     const stellarClient = new cote.Requester({
         name: 'elife-about -> Stellar',
@@ -62,25 +76,6 @@ function getWalletAccount() {
     }, (err, acc_) => {
         if(err) u.showErr(err)
         else account = acc_
-    })
-}
-
-const ssbClient = new cote.Requester({
-    name: 'elife-about -> SSB',
-    key: 'everlife-ssb-svc',
-})
-
-/*      outcome/
- * Register ourselves as a feed consumer with the SSB subsystem
- */
-function registerWithSSB() {
-    ssbClient.send({
-        type: 'register-feed-handler',
-        mskey: msKey,
-        mstype: 'ssb-msg',
-    }, (err, ssbid_) => {
-        if(err) u.showErr(err)
-        else ssbid = ssbid_
     })
 }
 
@@ -101,14 +96,8 @@ function startMicroservice() {
         if(req.msg.trim() != "whoami") return cb()
 
         cb(null, true)
-        sendReply(`I am Avatar: ${ssbid}\nWallet Account: ${account}`, req)
+        sendReply(`I am Avatar: ${avatarid}\nWallet Account: ${account}`, req)
     })
-
-    svc.on('ssb-msg', (req, cb) => {
-        // For now we do nothing but respond to `whoami` messages
-        cb()
-    })
-
 }
 
 main()
