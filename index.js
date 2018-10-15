@@ -3,6 +3,7 @@ const cote = require('cote')({statusLogsEnabled:false})
 const u = require('elife-utils')
 
 let ssbid
+let account
 
 /*      understand/
  * This is the main entry point where we start.
@@ -15,6 +16,7 @@ function main() {
     startMicroservice()
     registerWithCommMgr()
     registerWithSSB()
+    getWalletAccount()
 }
 
 const commMgrClient = new cote.Requester({
@@ -43,6 +45,23 @@ function registerWithCommMgr() {
         mstype: 'msg',
     }, (err) => {
         if(err) u.showErr(err)
+    })
+}
+
+/*      outcome/
+ * Load the wallet account from the stellar microservice
+ */
+function getWalletAccount() {
+    const stellarClient = new cote.Requester({
+        name: 'elife-about -> Stellar',
+        key: 'everlife-stellar-svc',
+    })
+
+    stellarClient.send({
+        type: 'account-id',
+    }, (err, acc_) => {
+        if(err) u.showErr(err)
+        else account = acc_
     })
 }
 
@@ -82,7 +101,7 @@ function startMicroservice() {
         if(req.msg.trim() != "whoami") return cb()
 
         cb(null, true)
-        sendReply(ssbid, req)
+        sendReply(`I am Avatar: ${ssbid}\nWallet Account: ${account}`, req)
     })
 
     svc.on('ssb-msg', (req, cb) => {
