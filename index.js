@@ -93,10 +93,23 @@ function startMicroservice() {
     svc.on('msg', (req, cb) => {
         if(!req.msg) return cb()
 
-        if(req.msg.trim() != "whoami") return cb()
+        const rx = /^set-nickname  *(.*)/i
+        let m = req.msg.match(rx)
+        if(m && m.length>=2){
+            ssbClient.send({
+                type:'set-nickname',
+                nickname:m[1]
+            })
+            cb(null,true)
+            sendReply(`Your avatar nickname is updated..`,req)
 
-        cb(null, true)
-        sendReply(`I am Avatar: ${avatarid}\nWallet Account: ${account}`, req)
+        }else if(req.msg.trim() != "whoami") { 
+            return cb()
+        }
+        else{
+            cb(null, true)
+            sendReply(`I am Avatar: ${ssbid}\nWallet Account: ${account}`, req)
+        }
     })
 }
 
