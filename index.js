@@ -40,6 +40,10 @@ function registerWithCommMgr() {
         type: 'register-msg-handler',
         mskey: msKey,
         mstype: 'msg',
+        mshelp: [
+            { cmd: '/whoami', txt: 'show avatar and wallet details' },
+            { cmd: '/set_nickname', txt: 'set your nickname' },
+        ],
     }, (err) => {
         if(err) u.showErr(err)
     })
@@ -93,7 +97,7 @@ function startMicroservice() {
     svc.on('msg', (req, cb) => {
         if(!req.msg) return cb()
 
-        const rx = /^set-nickname  *(.*)/i
+        const rx = /^\/set_nickname  *(.*)/i
         let m = req.msg.match(rx)
         if(m && m.length>=2){
             ssbClient.send({
