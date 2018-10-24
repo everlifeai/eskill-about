@@ -100,19 +100,29 @@ function startMicroservice() {
         const rx = /^\/set_nickname  *(.*)/i
         let m = req.msg.match(rx)
         if(m && m.length>=2){
-            ssbClient.send({
-                type:'set-nickname',
-                nickname:m[1]
-            })
             cb(null,true)
-            sendReply(`Your avatar nickname is updated..`,req)
 
-        }else if(req.msg.trim() != "/whoami") { 
-            return cb()
-        }
-        else{
+            ssbClient.send({
+                type:'new-msg',
+                msg: {
+                    type: 'about',
+                    name: m[1],
+                },
+            }, (err) => {
+                if(err) {
+                    u.showErr(err)
+                    sendReply(`Error setting nickname`)
+                } else {
+                    sendReply(`Your avatar nickname is updated..`,req)
+                }
+            })
+        } else if(req.msg.trim() == "/whoami") {
+            // TODO: show nickname also
             cb(null, true)
             sendReply(`I am Avatar: ${ssbid}\nWallet Account: ${account}`, req)
+        }
+        else {
+            return cb()
         }
     })
 }
