@@ -103,7 +103,7 @@ function startMicroservice() {
             cb(null,true)
             sendReply(`Your avatar nickname is updated..`,req)
 
-        }else if(req.msg.trim() != "whoami") { 
+        }else if(req.msg.trim() != "/whoami") { 
             return cb()
         }
         else{
