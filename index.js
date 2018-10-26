@@ -119,7 +119,7 @@ function startMicroservice() {
         } else if(req.msg.trim() == "/whoami") {
             // TODO: show nickname also
             cb(null, true)
-            sendReply(`I am Avatar: ${ssbid}\nWallet Account: ${account}`, req)
+            sendReply(`I am Avatar: ${avatarid}\nWallet Account: ${account}`, req)
         }
         else {
             return cb()
