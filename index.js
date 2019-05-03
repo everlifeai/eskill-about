@@ -119,7 +119,10 @@ function startMicroservice() {
         } else if(req.msg.trim() == "/whoami") {
             // TODO: show nickname also
             cb(null, true)
+            let il = process.env.ELIFE_INSTALL_FOLDER
+            let dl = u.dataLoc()
             sendReply(`I am Avatar: ${avatarid}\nWallet Account: ${account}`, req)
+            sendReply(`I am installed in:\n${il}\nMy data is stored in:\n${dl}`, req)
         }
         else {
             return cb()
