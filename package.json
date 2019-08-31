@@ -1,6 +1,6 @@
 {
   "name": "elife-about",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A Skill that learns about the Avatar's Owner",
   "main": "index.js",
   "author": "charles.lobo@gmail.com",
